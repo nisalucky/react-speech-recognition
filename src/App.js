@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import SpeechRecognition from "react-speech-recognition";
+import recognition from "react-speech-recognition";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const propTypes = {
+  // Props injected by SpeechRecognition
+  transcript: PropTypes.string,
+  resetTranscript: PropTypes.func,
+  browserSupportsSpeechRecognition: PropTypes.bool
+};
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.transcript
+    };
+
+    recognition.lang = "id-ID";
+  }
+  render() {
+    const {
+      transcript,
+      resetTranscript,
+      browserSupportsSpeechRecognition
+    } = this.props;
+
+    if (!browserSupportsSpeechRecognition) {
+      return null;
+    }
+
+    return (
+      <div className="App">
+        <button onClick={resetTranscript}>Reset</button>
+        <span>{transcript}</span>
+        {console.log(this.state.data)}
+        {/* {console.log(transcript)}  */}
+      </div>
+    );
+  }
 }
 
-export default App;
+App.propTypes = propTypes;
+
+export default SpeechRecognition(App);
